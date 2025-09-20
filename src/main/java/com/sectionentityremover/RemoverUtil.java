@@ -25,7 +25,6 @@ import java.util.Objects;
 
 public class RemoverUtil {
     public static void removeEntity(@NotNull Entity targetEntity) {
-        LogUtils.getLogger().info("[Section Entity Remover] remove: {}, Class:{}", targetEntity, targetEntity.getClass());
         if (targetEntity instanceof Player && !Config.IS_PLAYER_REMOVABLE.get()) {
             return;
         }
@@ -34,7 +33,6 @@ public class RemoverUtil {
             return;
         }
         Level level = targetEntity.level();
-        LogUtils.getLogger().info("{}",level);
         if (level instanceof ServerLevel serverLevel) {
             PersistentEntitySectionManager<Entity> entityManager = ((ServerLevelAccessor) serverLevel).getEntityManager();
             EntitySectionStorage<Entity> sectionStorage = ((PersistentEntitySectionManagerAccessor<Entity>) entityManager).getSectionStorage();
