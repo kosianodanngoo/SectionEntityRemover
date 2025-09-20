@@ -5,6 +5,7 @@ import com.sectionentityremover.mixin.EntitySectionStorageAccessor;
 import com.sectionentityremover.mixin.PersistentEntitySectionManagerAccessor;
 import com.sectionentityremover.mixin.ServerLevelAccessor;
 import net.minecraft.core.SectionPos;
+import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -16,6 +17,7 @@ import net.minecraft.world.level.entity.PersistentEntitySectionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.entity.PartEntity;
 import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -56,6 +58,9 @@ public class RemoverUtil {
                 targetEntity.setRemoved(removalReason);
             }
             targetEntity.onRemovedFromWorld();
+            if (targetEntity.isRemoved()) {
+                PacketDistributor.DIMENSION.with(serverLevel::dimension).send(new ClientboundRemoveEntitiesPacket(targetEntity.getId()));
+            }
         }
     }
 }
