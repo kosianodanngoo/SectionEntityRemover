@@ -13,7 +13,9 @@ import net.minecraft.world.level.entity.EntitySection;
 import net.minecraft.world.level.entity.EntitySectionStorage;
 import net.minecraft.world.level.entity.EntityTickList;
 import net.minecraft.world.level.entity.PersistentEntitySectionManager;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.entity.PartEntity;
+import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -46,10 +48,14 @@ public class RemoverUtil {
                 }
                 serverLevel.getChunkSource().removeEntity(targetEntity);
                 ((EntitySectionStorageAccessor<Entity>) sectionStorage).getSections().replace(index, newSection);
-                EntityTickList entityTickList = ((ServerLevelAccessor) serverLevel).getEntityTickList();
-                entityTickList.remove(targetEntity);
-                ((PersistentEntitySectionManagerAccessor<Entity>) entityManager).getVisibleEntityStorage().remove(targetEntity);
             }
+            EntityTickList entityTickList = ((ServerLevelAccessor) serverLevel).getEntityTickList();
+            entityTickList.remove(targetEntity);
+            ((PersistentEntitySectionManagerAccessor<Entity>) entityManager).getVisibleEntityStorage().remove(targetEntity);
+            for(Entity.RemovalReason removalReason : Entity.RemovalReason.values()){
+                targetEntity.setRemoved(removalReason);
+            }
+            targetEntity.onRemovedFromWorld();
         }
     }
 }
