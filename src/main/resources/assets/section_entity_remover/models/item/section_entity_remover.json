@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "section_entity_remover:item/section_entity_remover"
+  }
+}
