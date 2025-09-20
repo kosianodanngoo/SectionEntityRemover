@@ -6,7 +6,7 @@
   "refmap": "section_entity_remover.refmap.json",
   "mixins": [
     "EntitySectionStorageAccessor",
-    "com.sectionentityremover.register.PersistentEntitySectionManagerAccessor",
+    "PersistentEntitySectionManagerAccessor",
     "ServerLevelAccessor"
   ],
   "client": [
