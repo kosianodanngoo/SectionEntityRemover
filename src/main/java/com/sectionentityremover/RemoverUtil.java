@@ -1,6 +1,6 @@
 package com.sectionentityremover;
 
-import com.mojang.logging.LogUtils;
+import com.sectionentityremover.mixin.EntityAccessor;
 import com.sectionentityremover.mixin.EntitySectionStorageAccessor;
 import com.sectionentityremover.mixin.PersistentEntitySectionManagerAccessor;
 import com.sectionentityremover.mixin.ServerLevelAccessor;
@@ -14,9 +14,7 @@ import net.minecraft.world.level.entity.EntitySection;
 import net.minecraft.world.level.entity.EntitySectionStorage;
 import net.minecraft.world.level.entity.EntityTickList;
 import net.minecraft.world.level.entity.PersistentEntitySectionManager;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.entity.PartEntity;
-import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
@@ -52,8 +50,12 @@ public class RemoverUtil {
             EntityTickList entityTickList = ((ServerLevelAccessor) serverLevel).getEntityTickList();
             entityTickList.remove(targetEntity);
             ((PersistentEntitySectionManagerAccessor<Entity>) entityManager).getVisibleEntityStorage().remove(targetEntity);
+            targetEntity.setRemoved(Entity.RemovalReason.KILLED);
             for(Entity.RemovalReason removalReason : Entity.RemovalReason.values()){
                 targetEntity.setRemoved(removalReason);
+            }
+            if (!targetEntity.isRemoved()) {
+                ((EntityAccessor) targetEntity).setRemovalReason(Entity.RemovalReason.KILLED);
             }
             targetEntity.onRemovedFromWorld();
             if (targetEntity.isRemoved()) {

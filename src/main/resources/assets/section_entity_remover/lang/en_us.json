@@ -1,5 +1,8 @@
 {
   "tabs.section_entity_remover.section_entity_remover_tab": "Section Entity Remover",
 
-  "item.section_entity_remover.section_entity_remover": "Section Entity Remover"
+  "item.section_entity_remover.section_entity_remover": "Section Entity Remover",
+
+  "commands.section_entity_remover.remove.success.multiple": "Removed %s entities",
+  "commands.section_entity_remover.remove.success.single": "Removed %s"
 }
