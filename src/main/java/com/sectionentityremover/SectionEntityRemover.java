@@ -29,6 +29,8 @@ public class SectionEntityRemover {
 
         ModCreativeTabs.register(modEventBus);
 
+        MinecraftForge.EVENT_BUS.register(this);
+
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 }
