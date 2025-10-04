@@ -58,7 +58,7 @@ public class RemoverUtil {
                 ((EntityAccessor) targetEntity).setRemovalReason(Entity.RemovalReason.KILLED);
                 for(Entity.RemovalReason removalReason : Entity.RemovalReason.values()) {
                     if (targetEntity.isRemoved()) break;
-                    ((EntityAccessor) targetEntity).setRemovalReason(Entity.RemovalReason.KILLED);
+                    ((EntityAccessor) targetEntity).setRemovalReason(removalReason);
                 }
             }
             targetEntity.stopRiding();
