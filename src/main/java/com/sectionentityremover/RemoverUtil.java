@@ -56,7 +56,12 @@ public class RemoverUtil {
             }
             if (!targetEntity.isRemoved()) {
                 ((EntityAccessor) targetEntity).setRemovalReason(Entity.RemovalReason.KILLED);
+                for(Entity.RemovalReason removalReason : Entity.RemovalReason.values()) {
+                    if (targetEntity.isRemoved()) break;
+                    ((EntityAccessor) targetEntity).setRemovalReason(Entity.RemovalReason.KILLED);
+                }
             }
+            targetEntity.stopRiding();
             targetEntity.onRemovedFromWorld();
             if (targetEntity.isRemoved()) {
                 PacketDistributor.DIMENSION.with(serverLevel::dimension).send(new ClientboundRemoveEntitiesPacket(targetEntity.getId()));
