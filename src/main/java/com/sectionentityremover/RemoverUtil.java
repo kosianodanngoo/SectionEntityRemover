@@ -57,7 +57,8 @@ public class RemoverUtil {
                     }
                 }
                 ((PersistentEntitySectionManagerAccessor<Entity>) entityManager).setVisibleEntityStorage(newEntityLookup);
-                ((PersistentEntitySectionManagerAccessor<Entity>) entityManager).setEntityGetter(new LevelEntityGetterAdapter<>(newEntityLookup, sectionStorage));
+                LevelEntityGetter<Entity> newEntityGetter = new LevelEntityGetterAdapter<>(newEntityLookup, sectionStorage);
+                ((PersistentEntitySectionManagerAccessor<Entity>) entityManager).setEntityGetter(newEntityGetter);
             }
             targetEntity.setRemoved(Entity.RemovalReason.KILLED);
             for(Entity.RemovalReason removalReason : Entity.RemovalReason.values()){
