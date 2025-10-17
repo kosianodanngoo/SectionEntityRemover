@@ -7,13 +7,11 @@ import com.sectionentityremover.mixin.ServerLevelAccessor;
 import net.minecraft.core.SectionPos;
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.entity.EntitySection;
-import net.minecraft.world.level.entity.EntitySectionStorage;
-import net.minecraft.world.level.entity.EntityTickList;
-import net.minecraft.world.level.entity.PersistentEntitySectionManager;
+import net.minecraft.world.level.entity.*;
 import net.minecraftforge.entity.PartEntity;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
@@ -49,9 +47,20 @@ public class RemoverUtil {
             }
             EntityTickList entityTickList = ((ServerLevelAccessor) serverLevel).getEntityTickList();
             entityTickList.remove(targetEntity);
-            ((PersistentEntitySectionManagerAccessor<Entity>) entityManager).getVisibleEntityStorage().remove(targetEntity);
+            EntityLookup<Entity> entityLookup = ((PersistentEntitySectionManagerAccessor<Entity>) entityManager).getVisibleEntityStorage();
+            entityLookup.remove(targetEntity);
+            if(entityLookup.getEntity(targetEntity.getId()) != null) {
+                EntityLookup<Entity> newEntityLookup = new EntityLookup<Entity>();
+                for (Entity entity : entityLookup.getAllEntities()) {
+                    if (entity != targetEntity) {
+                        newEntityLookup.add(entity);
+                    }
+                }
+                ((PersistentEntitySectionManagerAccessor<Entity>) entityManager).setVisibleEntityStorage(newEntityLookup);
+            }
             targetEntity.setRemoved(Entity.RemovalReason.KILLED);
             for(Entity.RemovalReason removalReason : Entity.RemovalReason.values()){
+                targetEntity.remove(removalReason);
                 targetEntity.setRemoved(removalReason);
             }
             if (!targetEntity.isRemoved()) {
@@ -63,8 +72,12 @@ public class RemoverUtil {
             }
             targetEntity.stopRiding();
             targetEntity.onRemovedFromWorld();
+            targetEntity.invalidateCaps();
             if (targetEntity.isRemoved()) {
                 PacketDistributor.DIMENSION.with(serverLevel::dimension).send(new ClientboundRemoveEntitiesPacket(targetEntity.getId()));
+            }
+            if (targetEntity instanceof ServerPlayer player) {
+                serverLevel.getServer().getPlayerList().respawn(player, false);
             }
         }
     }

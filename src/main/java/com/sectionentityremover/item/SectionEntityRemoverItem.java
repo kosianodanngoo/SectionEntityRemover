@@ -23,6 +23,12 @@ public class SectionEntityRemoverItem extends Item {
     }
 
     @Override
+    public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
+        RemoverUtil.removeEntity(entity);
+        return true;
+    }
+
+    @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity victim, LivingEntity attacker) {
         RemoverUtil.removeEntity(victim);
         return true;

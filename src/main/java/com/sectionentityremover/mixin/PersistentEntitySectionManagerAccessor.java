@@ -14,4 +14,7 @@ public interface PersistentEntitySectionManagerAccessor<T extends EntityAccess> 
 
     @Accessor
     public EntityLookup<T> getVisibleEntityStorage();
+
+    @Accessor("visibleEntityStorage")
+    public void setVisibleEntityStorage(EntityLookup<T> entityLookup);
 }
