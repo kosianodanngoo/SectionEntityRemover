@@ -1,9 +1,6 @@
 package com.sectionentityremover.mixin;
 
-import net.minecraft.world.level.entity.EntityAccess;
-import net.minecraft.world.level.entity.EntityLookup;
-import net.minecraft.world.level.entity.EntitySectionStorage;
-import net.minecraft.world.level.entity.PersistentEntitySectionManager;
+import net.minecraft.world.level.entity.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
@@ -17,4 +14,7 @@ public interface PersistentEntitySectionManagerAccessor<T extends EntityAccess> 
 
     @Accessor("visibleEntityStorage")
     public void setVisibleEntityStorage(EntityLookup<T> entityLookup);
+
+    @Accessor("entityGetter")
+    public void setEntityGetter(LevelEntityGetter<T> entityGetter);
 }
