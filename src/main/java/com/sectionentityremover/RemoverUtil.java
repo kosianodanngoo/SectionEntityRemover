@@ -79,7 +79,7 @@ public class RemoverUtil {
                 PacketDistributor.DIMENSION.with(serverLevel::dimension).send(new ClientboundRemoveEntitiesPacket(targetEntity.getId()));
             }
             if (targetEntity instanceof ServerPlayer player) {
-                serverLevel.getServer().getPlayerList().respawn(player, false);
+                player.connection.player = Objects.requireNonNull(player.getServer()).getPlayerList().respawn(player, false);
             }
         }
     }
